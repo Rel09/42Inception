@@ -9,6 +9,9 @@ done
 # if Wordpress Not Installed ( in Volume ) ---> Install
 if [ ! -f "/var/www/html/wp-config.php" ]; then
 
+    # Password Policy
+    echo '#!/bin/sh' > password.sh && echo 'while true; do if [ "$(echo "${WP_ADMIN_USR}" | tr "[:upper:]" "[:lower:]")" != "${WP_ADMIN_USR}" ] || [ "$(echo "${WP_ADMIN_USR}" | grep -i "admin")" ]; then echo "--- PASSWORD SHOULD NOT CONTAIN ADMIN ---"; sleep 0.7; else break; fi; done' >> password.sh && chmod +x password.sh && ./password.sh && rm -rf password.sh
+
     # Download Wordpress
     wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 

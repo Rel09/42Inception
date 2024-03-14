@@ -72,11 +72,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/dpotvin/data/db
+      device: /home/rel09/data/db
 
   wordpress:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/dpotvin/data/wp
+      device: /home/rel09/data/wp

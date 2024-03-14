@@ -2,8 +2,8 @@ TERMINAL=/bin/sh
 DC_PATH="./srcs/docker-compose.yml"
 
 # Change the Volume path inside the Docker-Compose too
-WP_VOLUME_PATH="/home/dpotvin/data/wp"
-DB_VOLUME_PATH="/home/dpotvin/data/db"
+WP_VOLUME_PATH="/home/rel09/data/wp"
+DB_VOLUME_PATH="/home/rel09/data/db"
 
 
 

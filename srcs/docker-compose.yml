@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+
+  # ++++++++++++ Wordpress Container ++++++++++++
+  wordpress:
+    container_name:           wordpress_cont
+    image:                    wordpress_image
+    build:                    requirements/wordpress/
+    environment:
+      WP_TITLE:               ${WP_TITLE}
+      WP_ADMIN_USR:           ${WP_ADMIN_USR}
+      WP_ADMIN_PWD:           ${WP_ADMIN_PWD}
+      WP_ADMIN_EMAIL:         ${WP_ADMIN_EMAIL}
+      WP_USER_USR:            ${WP_USER_USR}
+      WP_USER_PWD:            ${WP_USER_PWD}
+      WP_USER_EMAIL:          ${WP_USER_EMAIL}
+      DATABASE_NAME:          ${DATABASE_NAME}
+      DATABASE_ADMIN:         ${DATABASE_ADMIN}
+      DATABASE_ADMIN_PW:      ${DATABASE_ADMIN_PW}
+    networks:
+      - mynetwork
+    volumes:  
+      - wordpress:/var/www/html
+    depends_on:
+     - mariadb
+    restart: always
+
+
+  # ++++++++++++ NGINX Container ++++++++++++
+  nginx:
+    container_name:           nginx_cont
+    image:                    nginx_image
+    build:                    requirements/nginx/
+    ports:
+      - "443:443"
+    networks:
+      - mynetwork
+    volumes:  
+      - wordpress:/var/www/html
+    depends_on:
+      - wordpress
+    restart: always
+
+
+  # ++++++++++++ MariaDB ++++++++++++
+  mariadb:
+    container_name:           mariadb_cont
+    image:                    mariadb_image
+    build:                    requirements/mariadb/
+    environment:
+      DATABASE_NAME:          ${DATABASE_NAME}
+      DATABASE_ADMIN:         ${DATABASE_ADMIN}
+      DATABASE_ADMIN_PW:      ${DATABASE_ADMIN_PW}
+    networks:
+      - mynetwork
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: always
+
+
+# ++++++++++++ Network ++++++++++++
+networks:
+  mynetwork:
+    name: mynetwork
+
+
+# ++++++++++++ Volumes ++++++++++++
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/dpotvin/data/db
+
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/dpotvin/data/wp
